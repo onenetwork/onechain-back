@@ -23,6 +23,7 @@ contract Backchain {
   /// Places a new hash on the Backchain. Only the Orchestrator may post a hash.
   function post(bytes32 hash) {
     require(msg.sender == orchestrator);
+    if (hashMapping[hash]) return;
     hashMapping[hash] = true;
     hashes.push(hash);
   }

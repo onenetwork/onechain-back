@@ -21,6 +21,7 @@ contract('Backchain', function(accounts) {
 
   it("should accept posts from the orchestrator", function() {
     var bk;
+    var lastHashCount = 0;
     return Backchain.deployed().then(function(instance) {
       bk = instance;
       return bk.post("0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", { from: accounts[0] });
@@ -41,7 +42,13 @@ contract('Backchain', function(accounts) {
       assert.equal(verified, true, "Hash 0xafef... should have been verified");
       return bk.hashCount.call();
     }).then(function(hashCount) {
+      lastHashCount = hashCount;
       assert.equal(hashCount.toNumber(), 2, "Backchain should have added one hash");
+      return bk.post("0xafef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", { from: accounts[0] });
+    }).then(function() {
+      return bk.hashCount.call();
+    }).then(function(hashCount) {
+      assert.equal(hashCount.toNumber(), 2, "Should NOT have added a new hash because it was a dupe");
       return bk.getHash.call(0);
     }).then(function(hash) {
       assert.equal(hash, "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "Hash 0x5fef expected at position 0");

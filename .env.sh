@@ -20,6 +20,7 @@ bk() {
   elif [ "$1" = 'stop' ]; then
     kill -9 $(ps -ef | grep testrpc | grep -v grep | awk '{print $2;}')
     echo "Stoppped"
+    rm -f /home/vagrant/log/testrpc.log
   else
     echo "usage: bk <command>"
     echo

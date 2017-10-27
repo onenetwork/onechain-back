@@ -20,7 +20,7 @@ bk() {
     less +F /home/vagrant/log/testrpc.log
   elif [ "$1" = 'start' ]; then
     echo "Starting testrpc ..."
-    testrpc 2>&1 >> /home/vagrant/log/testrpc.log &
+    testrpc -m "uncle kick case ankle crush garbage pumpkin shiver index critic like slight" 2>&1 >> /home/vagrant/log/testrpc.log &
   elif [ "$1" = 'stop' ]; then
     kill -9 $(ps -ef | grep testrpc | grep -v grep | awk '{print $2;}')
     echo "Stoppped"

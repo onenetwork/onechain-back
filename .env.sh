@@ -10,6 +10,10 @@ echo "For help, type: bk help"
 echo
 
 alias e=vim
+alias gradle="gradle --console plain"
+
+export GRADLE_HOME=/opt/gradle/gradle-4.2.1
+export PATH=$PATH:$GRADLE_HOME/bin
 
 bk() {
   if [ "$1" = 'log' ]; then

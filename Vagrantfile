@@ -41,6 +41,8 @@ Vagrant.configure("2") do |config|
     sudo npm install -g web3
     sudo npm install -g truffle@3.4.3
 
+    sudo printf "\n55.55.55.55\tvagrant.onenetwork.com\n" >> /etc/hosts
+    
     printf ". ~/.bashrc\ncd /vagrant\n. .env.sh\n" >> /home/vagrant/.bash_profile
     mkdir /home/vagrant/log
      

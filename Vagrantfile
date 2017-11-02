@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
 
-  config.vm.network "private_network", ip: "55.55.55.1"
+  config.vm.network "private_network", ip: "192.168.201.55"
 
   config.vm.synced_folder "E:/views/onechain-back", "/vagrant", type: "virtualbox"
 
@@ -41,7 +41,7 @@ Vagrant.configure("2") do |config|
     sudo npm install -g web3
     sudo npm install -g truffle@3.4.3
 
-    sudo printf "\n55.55.55.1\tbackchain-vagrant.onenetwork.com\n" >> /etc/hosts
+    sudo printf "\n192.168.201.55\tbackchain-vagrant.onenetwork.com\n" >> /etc/hosts
     
     printf ". ~/.bashrc\ncd /vagrant\n. .env.sh\n" >> /home/vagrant/.bash_profile
     mkdir /home/vagrant/log

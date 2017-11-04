@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "E:/views/onechain-back", "/vagrant", type: "virtualbox"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = "2048"
+    vb.memory = "1536"
   end
 
   config.vm.provision :shell, inline: <<-SHELL

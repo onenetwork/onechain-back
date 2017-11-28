@@ -15,6 +15,8 @@ alias gradle="gradle --console plain"
 export GRADLE_HOME=/opt/gradle/gradle-4.2.1
 export PATH=$PATH:$GRADLE_HOME/bin
 
+export LS_COLORS='ow=01;36;40'
+
 bk() {
   if [ "$1" = 'log' ]; then
     less +F /home/vagrant/log/testrpc.log

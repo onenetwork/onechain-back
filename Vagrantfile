@@ -54,7 +54,7 @@ Vagrant.configure("2") do |config|
     bk start
     cd eth
     truffle migrate | grep 'Backchain:.*' | grep -o '0x.*' | xargs -i printf "\n\nTest backchain server available at http://192.168.201.55:8545\nBackchain contract address is %s" {}
-    printf "Orchestrator private key is 0x8ad0132f808d0830c533d7673cd689b7fde2d349ff0610e5c04ceb9d6efb4eb1"
+    printf "Orchestrator private key is 0x8ad0132f808d0830c533d7673cd689b7fde2d349ff0610e5c04ceb9d6efb4eb1\n"
     printf "Participant private key is 0x69bc764651de75758c489372c694a39aa890f911ba5379caadc08f44f8173051\n"
 
     printf "\n\n=== Provisioning Complete ===\n"

@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.network "private_network", ip: "192.168.201.55"
 
-  config.vm.synced_folder "E:/views/onechain-back", "/vagrant", type: "virtualbox"
+  config.vm.synced_folder "C:/views/onechain-back", "/vagrant", type: "virtualbox"
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "1536"
@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
     sudo apt-get install -y oracle-java8-installer
      
     # Install gradle
-    wget https://services.gradle.org/distributions/gradle-4.2.1-bin.zip
+    wget --progress=dot:giga https://services.gradle.org/distributions/gradle-4.2.1-bin.zip
     sudo unzip -d /opt/gradle gradle-4.2.1-bin.zip
     
     # Install node.js

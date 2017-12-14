@@ -23,9 +23,17 @@ bk() {
   elif [ "$1" = 'start' ]; then
     echo "Starting testrpc ..."
     testrpc -m "uncle kick case ankle crush garbage pumpkin shiver index critic like slight" 2>&1 >> /home/vagrant/log/testrpc.log &
+    pushd . > /dev/null
+    cd /vagrant/eth
+    truffle migrate | grep 'Backchain:.*' | grep -o '0x.*' | xargs -i printf "\n\nTest backchain server available at http://192.168.201.55:8545\nBackchain contract address is %s" {}
+    popd > /dev/null
   elif [ "$1" = 'stop' ]; then
-    kill -9 $(ps -ef | grep testrpc | grep -v grep | awk '{print $2;}')
-    echo "Stoppped"
+    BKPROC=$(ps -ef | grep testrpc | grep -v grep | awk '{print $2;}')
+    if [ ! -z "$BKPROC" ]
+    then
+      kill -9 $BKPROC
+    fi
+    echo "Stopped"
     rm -f /home/vagrant/log/testrpc.log
   else
     echo "usage: bk <command>"

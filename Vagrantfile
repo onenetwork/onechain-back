@@ -50,8 +50,7 @@ Vagrant.configure("2") do |config|
     
     sudo su - vagrant
     cd /vagrant
-    . .env.sh
-    bk start
+    sudo su - vagrant -c 'bk start'
 
     printf "\n\n=== Provisioning Complete ===\n"
   SHELL

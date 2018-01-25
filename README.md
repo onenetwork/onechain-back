@@ -1,6 +1,6 @@
 # onechain-back
 
-Provides both the smart contract for One Network Enterprises' Backchain.
+Provides the smart contract for One Network Enterprises' Backchain.
 The Backchain is a blockchain used to verify transactions in a supply chain network where
 transient trust is delegated to an Orchestrator.
 

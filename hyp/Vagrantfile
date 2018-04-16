@@ -1,0 +1,53 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+
+  config.vm.network "private_network", ip: "192.168.201.56"
+
+  config.vm.synced_folder "E:/views/onechain-back/hyp", "/vagrant", type: "virtualbox"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+  end
+
+  config.vm.provision :shell, inline: <<-SHELL
+    sudo apt-get update
+    sudo apt-get -y install g++ golang git unzip dos2unix subversion python
+
+    # Hyperledger dependencies; see https://chainhero.io/2018/03/tutorial-build-blockchain-app-2/
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    sudo apt update
+    sudo apt install -y docker-ce
+    sudo groupadd docker
+    sudo usermod -a -G docker vagrant
+    sudo gpasswd -a ${USER} docker
+    sudo service docker restart
+    sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    
+    # Install node.js
+    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+    sudo apt-get -y install nodejs
+    sudo apt-get -y install npm
+
+    # Hyperledger fabric samples
+    curl -sSL https://goo.gl/6wtTN5 | bash -s 1.1.0
+    mv fabric-samples /vagrant
+    chown -r vagrant fabric-samples
+    
+    sudo printf "\n192.168.201.56\tbackchain-vagrant.onenetwork.com\n" >> /etc/hosts
+    
+    printf ". ~/.bashrc\ncd /vagrant\n. .env.sh\n" >> /home/vagrant/.bash_profile
+    mkdir /home/vagrant/log
+     
+    sudo chown -R vagrant /home/vagrant
+    
+    sudo su - vagrant
+    cd /vagrant
+
+    printf "\n\n=== Provisioning Complete ===\n"
+  SHELL
+end

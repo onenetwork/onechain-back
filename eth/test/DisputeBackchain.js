@@ -121,7 +121,7 @@ contract('DisputeBackchain', function(accounts) {
       return dbk.filterDisputesByState.call(disputeIDArray, "CLOSED");
     }).then(function(disputeIds){
       assert.equal(disputeIds.length, 0, "the length of disputeID should be 0");
-      return dbk.closeDispute.call("0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480");
+      return dbk.closeDispute("0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", { from: accounts[0] });
     }).then(function(){
       dbk.verify.call("0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480").then(function(verified){
         assert.equal(verified, true, "Hash 0x1fef7... should have been verified");

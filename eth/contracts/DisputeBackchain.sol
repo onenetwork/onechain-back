@@ -17,7 +17,6 @@ contract DisputeBackchain {
     Reason reason;
   }
 
-  /// The Orchestrator is the only entity permitted to post hashes
   address private orchestrator;
   bytes32[] private disputeIDs;
   mapping (bytes32 => Dispute) private disputeIdToDisputeMapping;
@@ -41,7 +40,6 @@ contract DisputeBackchain {
     return disputeSubmissionWindowInMinutes;
   }
   
-  /// Places a new hash on the Backchain. Only the Orchestrator may post a hash.
   function submitDispute(bytes32 disputeID, address disputingPartyAddress, bytes32 disputedTransactionID, bytes32[] disputedBusinessTransactionIDs, string reasonCode) {
     require(msg.sender == disputingPartyAddress);
     if (verify(disputeID)) return;

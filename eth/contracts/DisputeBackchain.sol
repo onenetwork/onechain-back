@@ -91,14 +91,21 @@ contract DisputeBackchain {
     revert();
   }
 
-  function filterDisputesByDisputingParty(bytes32[] ids, address disputingParty) public constant returns(bytes32[]) {
-    if (ids.length > 0){
+  function filterDisputesByDisputingParty(bytes32[] ids, address[] disputingPartys) public constant returns(bytes32[]) {
+    if (ids.length > 0 && disputingPartys.length > 0){
       uint[] memory locationPointer = new uint[](ids.length);
       uint count=0;
+      Dispute memory dispute;
       for (uint i = 0; i < ids.length; i++) {
-        if (verify(ids[i]) && (disputeIdToDisputeMapping[ids[i]].disputingParty == disputingParty)) {
-          locationPointer[count] = i;
-          count++;
+        dispute = disputeIdToDisputeMapping[ids[i]];
+        if (verify(dispute, ids[i])) {
+          for(uint j = 0; j < disputingPartys.length; j++) {
+            if(dispute.disputingParty == disputingPartys[j]) {
+              locationPointer[count] = i;
+              count++;
+              break;
+            }
+          }
         }
       }
       bytes32[] memory returnDisputeIDs = new bytes32[](count);
@@ -107,20 +114,27 @@ contract DisputeBackchain {
       }
       return returnDisputeIDs;
     }
-    if (disputeIDs.length > 0) {
-      return filterDisputesByDisputingParty(disputeIDs, disputingParty);
+    if (disputeIDs.length > 0 && disputingPartys.length > 0) {
+      return filterDisputesByDisputingParty(disputeIDs, disputingPartys);
     }
     return new bytes32[](0);
   }
 
-  function filterDisputesByDisputedTransactionIDs(bytes32[] ids, bytes32 disputedTransactionID) public constant returns(bytes32[]) {
-    if (ids.length > 0){
+  function filterDisputesByDisputedTransactionIDs(bytes32[] ids, bytes32[] disputedTransactionIDs) public constant returns(bytes32[]) {
+    if (ids.length > 0 && disputedTransactionIDs.length > 0){
       uint[] memory locationPointer = new uint[](ids.length);
       uint count=0;
+      Dispute memory dispute;
       for (uint i = 0; i < ids.length; i++) {
-        if (verify(ids[i]) && (disputeIdToDisputeMapping[ids[i]].disputedTransactionId == disputedTransactionID)) {
-          locationPointer[count] = i;
-          count++;
+        dispute = disputeIdToDisputeMapping[ids[i]];
+        if (verify(dispute, ids[i])) {
+          for(uint j = 0; j < disputedTransactionIDs.length; j++) {
+            if(dispute.disputedTransactionId == disputedTransactionIDs[j]) {
+              locationPointer[count] = i;
+              count++;
+              break;
+            }
+          }
         }
       }
       bytes32[] memory returnDisputeIDs = new bytes32[](count);
@@ -129,8 +143,8 @@ contract DisputeBackchain {
       }
       return returnDisputeIDs;
     }
-    if (disputeIDs.length > 0) {
-      return filterDisputesByDisputedTransactionIDs(disputeIDs, disputedTransactionID);
+    if (disputeIDs.length > 0 && disputedTransactionIDs.length > 0) {
+      return filterDisputesByDisputedTransactionIDs(disputeIDs, disputedTransactionIDs);
     }
     return new bytes32[](0);
   }
@@ -141,9 +155,9 @@ contract DisputeBackchain {
       uint count=0;
       Dispute memory dispute;
       for (uint i = 0; i < ids.length; i++) {
-        if (verify(ids[i])) {
-          dispute = disputeIdToDisputeMapping[ids[i]];
-          for (uint j = 0; j < dispute.disputedBusinessTransactionIds.length; j++) {
+        dispute = disputeIdToDisputeMapping[ids[i]];
+        if (verify(dispute, ids[i])) {
+          for (uint j = 0; j < disputedBusinessTransactionIds.length; j++) {
             if (dispute.disputedBusinessTransactionIds[j] == disputedBusinessTransactionIds[j]) {
               locationPointer[count] = i;
               count++;
@@ -164,17 +178,17 @@ contract DisputeBackchain {
     return new bytes32[](0);
   }
 
-  function findDispute(bytes32[] ids, address disputingPartyAddress, bytes32 disputedTransactionID, bytes32[] disputedBusinessTransactionIDs) public constant returns(bytes32[]) {
+  function findDisputes(bytes32[] ids, address[] disputingPartys, bytes32[] disputedTransactionIDs, bytes32[] disputedBusinessTransactionIDs) public constant returns(bytes32[]) {
     if (ids.length > 0){
       bytes32[] memory returnDisputeIDs = ids;
-      if (disputingPartyAddress != 0x0) {
-        returnDisputeIDs = filterDisputesByDisputingParty(returnDisputeIDs, disputingPartyAddress);
+      if (disputingPartys.length > 0) {
+        returnDisputeIDs = filterDisputesByDisputingParty(returnDisputeIDs, disputingPartys);
       }
       if (returnDisputeIDs.length == 0) {
         return new bytes32[](0);
       }
-      if (disputedTransactionID.length > 0) {
-        returnDisputeIDs = filterDisputesByDisputedTransactionIDs(returnDisputeIDs, disputedTransactionID);
+      if (disputedTransactionIDs.length > 0) {
+        returnDisputeIDs = filterDisputesByDisputedTransactionIDs(returnDisputeIDs, disputedTransactionIDs);
       }
       if (returnDisputeIDs.length == 0) {
         return new bytes32[](0);
@@ -185,12 +199,12 @@ contract DisputeBackchain {
       return returnDisputeIDs;
     }
     if (disputeIDs.length > 0) {
-      return findDispute(disputeIDs, disputingPartyAddress, disputedTransactionID, disputedBusinessTransactionIDs);
+      return findDisputes(disputeIDs, disputingPartys, disputedTransactionIDs, disputedBusinessTransactionIDs);
     }
     return new bytes32[](0);
   }
 
-  function findDispute(bytes32[] ids, uint submittedDateStart, uint submittedDateEnd, uint closedDateStart, uint closedDateEnd, string stateValue, string reasonValue) public constant returns(bytes32[]) {
+  function findDisputes(bytes32[] ids, uint submittedDateStart, uint submittedDateEnd, uint closedDateStart, uint closedDateEnd, uint[] stateValues, uint[] reasonValues) public constant returns(bytes32[]) {
     if (ids.length > 0){
       bytes32[] memory returnDisputeIDs = ids;
       if ((submittedDateStart == 0 && submittedDateStart != submittedDateEnd) || (closedDateStart == 0 && closedDateStart != closedDateEnd)) {
@@ -199,19 +213,19 @@ contract DisputeBackchain {
       if (returnDisputeIDs.length == 0) {
         return new bytes32[](0);
       }
-      if (!stringsEqual(stateValue,"")) {
-        returnDisputeIDs = filterDisputesByState(returnDisputeIDs, stateValue);
+      if (stateValues.length > 0) {
+        returnDisputeIDs = filterDisputesByState(returnDisputeIDs, stateValues);
       }
       if (returnDisputeIDs.length == 0) {
         return new bytes32[](0);
       }
-      if (!stringsEqual(stateValue,"") || !stringsEqual(reasonValue,"")) {
-        returnDisputeIDs = filterDisputesByReason(returnDisputeIDs, reasonValue);
+      if (reasonValues.length > 0) {
+        returnDisputeIDs = filterDisputesByReason(returnDisputeIDs, reasonValues);
       }
       return returnDisputeIDs;
     }
     if (disputeIDs.length > 0) {
-      return findDispute(disputeIDs, submittedDateStart, submittedDateEnd, closedDateStart, closedDateEnd, stateValue, reasonValue);
+      return findDisputes(disputeIDs, submittedDateStart, submittedDateEnd, closedDateStart, closedDateEnd, stateValues, reasonValues);
     }
     return new bytes32[](0);
   }
@@ -249,6 +263,64 @@ contract DisputeBackchain {
     }
     if (disputeIDs.length > 0) {
       return filterDisputesByDates(disputeIDs, submittedDateStart, submittedDateEnd, closedDateStart, closedDateEnd);
+    }
+    return new bytes32[](0);
+  }
+
+  function filterDisputesByState(bytes32[] ids, uint[] stateValues) public constant returns(bytes32[]) {
+    if (ids.length > 0 && stateValues.length > 0){
+      uint[] memory locationPointer = new uint[](ids.length);
+      uint count=0;
+      Dispute memory dispute;
+      for (uint i = 0; i < ids.length; i++) {
+        dispute = disputeIdToDisputeMapping[ids[i]];
+        if (verify(dispute, ids[i])) {
+          for (uint j = 0; j < stateValues.length; j++) {
+            if (uint(dispute.state) == stateValues[j]) {
+              locationPointer[count] = i;
+              count++;
+              break;
+            }
+          }
+        }
+      }
+      bytes32[] memory returnDisputeIDs = new bytes32[](count);
+      for (uint k = 0; k < count; k++) {
+        returnDisputeIDs[k] = ids[locationPointer[k]];
+      }
+      return returnDisputeIDs;
+    }
+    if (disputeIDs.length > 0 && stateValues.length > 0) {
+      return filterDisputesByState(disputeIDs, stateValues);
+    }
+    return new bytes32[](0);
+  }
+
+  function filterDisputesByReason(bytes32[] ids, uint[] reasonValues) public constant returns(bytes32[]) {
+    if (ids.length > 0 && reasonValues.length > 0){
+      uint[] memory locationPointer = new uint[](ids.length);
+      uint count=0;
+      Dispute memory dispute;
+      for (uint i = 0; i < ids.length; i++) {
+        dispute = disputeIdToDisputeMapping[ids[i]];
+        if (verify(dispute, ids[i])) {
+          for (uint j = 0; j < reasonValues.length; j++) {
+            if (uint(dispute.reason) == reasonValues[j]) {
+              locationPointer[count] = i;
+              count++;
+              break;
+            }
+          }
+        }
+      }
+      bytes32[] memory returnDisputeIDs = new bytes32[](count);
+      for (uint k = 0; k < count; k++) {
+        returnDisputeIDs[k] = ids[locationPointer[k]];
+      }
+      return returnDisputeIDs;
+    }
+    if (disputeIDs.length > 0 && reasonValues.length > 0) {
+      return filterDisputesByReason(disputeIDs, reasonValues);
     }
     return new bytes32[](0);
   }

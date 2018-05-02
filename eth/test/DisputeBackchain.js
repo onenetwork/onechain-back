@@ -56,7 +56,7 @@ contract('DisputeBackchain', function(accounts) {
     var disputeIDArray = [];
     return DisputeBackchain.deployed().then(function(instance) {
       dbk = instance;
-      return dbk.filterDisputesByDisputingParty.call(disputeIDArray,accounts[0])
+      return dbk.filterDisputesByDisputingParty.call(disputeIDArray,[accounts[0]])
     }).then(function(disputeIds) {
       assert.equal(disputeIds.length, 2, "the length of disputeID should be 2");
       assert.equal(disputeIds[0], "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x5fef7");
@@ -76,7 +76,7 @@ contract('DisputeBackchain', function(accounts) {
         assert.equal(result[2][0], "0xcfef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "disputing party address did not matched" );
         assert.equal(result[2][1],"0xdfef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "disputedBusinessTransactionIDs did not matched" );
       });
-      return dbk.filterDisputesByDisputingParty.call(disputeIDArray,accounts[1])
+      return dbk.filterDisputesByDisputingParty.call(disputeIDArray,[accounts[1]])
     }).then(function(disputeIds) {
       assert.equal(disputeIds.length, 1, "the length of disputeID should be 1");
       assert.equal(disputeIds[0], "0x1fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x1fef7");
@@ -97,7 +97,7 @@ contract('DisputeBackchain', function(accounts) {
     var disputeIDArray = [];
     return DisputeBackchain.deployed().then(function(instance) {
       dbk = instance;
-      return dbk.filterDisputesByDisputingParty.call(disputeIDArray,accounts[0])
+      return dbk.filterDisputesByDisputingParty.call(disputeIDArray,[accounts[0]])
     }).then(function(disputeIds) {
       assert.equal(disputeIds.length, 2, "the length of disputeID should be 2");
       assert.equal(disputeIds[0], "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x5fef7");
@@ -108,7 +108,7 @@ contract('DisputeBackchain', function(accounts) {
       dbk.verify.call(disputeIds[1]).then(function(verified){
         assert.equal(verified, true, "Hash 0x1fef... should have been verified");
       });
-      return dbk.filterDisputesByDisputingParty.call(disputeIDArray,accounts[1])
+      return dbk.filterDisputesByDisputingParty.call(disputeIDArray,[accounts[1]])
     }).then(function(disputeIds) {
       assert.equal(disputeIds.length, 1, "the length of disputeID should be 1");
       assert.equal(disputeIds[0], "0x1fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x1fef7");

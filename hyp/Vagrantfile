@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
     sudo usermod -a -G docker vagrant
     sudo gpasswd -a ${USER} docker
     sudo service docker restart
-    sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+	sudo curl -k -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
     
     # Install node.js

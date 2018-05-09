@@ -3,7 +3,7 @@ pragma solidity ^0.4.0;
 contract DisputeBackchain {
 
   enum State { OPEN, CLOSED}
-  enum Reason { INVALID }
+  enum Reason { HASH_NOT_FOUND, INPUT_DISPUTED, TRANSACTION_DATE_DISPUTED, TRANSACTION_PARTIES_DISPUTED, DISPUTE_BUSINESS_TRANSACTIONS, FINANCIAL_DISPUTED}
 
 
   struct Dispute {
@@ -46,11 +46,11 @@ contract DisputeBackchain {
   /// Places a new hash on the DsiputeBackchain.
   function submitDispute(bytes32 disputeID, address disputingPartyAddress, bytes32 disputedTransactionID, bytes32[] disputedBusinessTransactionIDs, string reasonCode) {
     require(msg.sender == disputingPartyAddress);
-    require(verify(disputeID) == false);
     Reason reasonValue = getReasonValue(reasonCode);
-    if(disputeID.length <= 0) {
-      disputeID = keccak256(disputingPartyAddress,disputedTransactionID, disputedBusinessTransactionIDs);
+    if(disputeID.length <= 0 || bytes32(0x0000000000000000000000000000000000000000000000000000000000000000) == disputeID) {
+      disputeID = keccak256(disputingPartyAddress,disputedTransactionID, now);
     }
+    require(verify(disputeID) == false);
     disputeIdToDisputeMapping[disputeID] = Dispute({disputeId:disputeID, disputingParty:disputingPartyAddress, disputedTransactionId:disputedTransactionID, disputedBusinessTransactionIds:disputedBusinessTransactionIDs, submittedDate:now, closeDate:0, state:State.OPEN, reason:reasonValue});
     disputeIDs.push(disputeID);
   }
@@ -362,8 +362,23 @@ contract DisputeBackchain {
   }
 
   function getReasonStringValue(Reason reason) private constant returns (string){
-    if(reason == Reason.INVALID) {
-      return "INVALID";
+    if(Reason.HASH_NOT_FOUND == reason) {
+      return "HASH_NOT_FOUND";
+    }
+    if(Reason.INPUT_DISPUTED == reason) {
+      return "INPUT_DISPUTED";
+    }
+    if(Reason.TRANSACTION_DATE_DISPUTED == reason) {
+      return "TRANSACTION_DATE_DISPUTED";
+    }
+    if(Reason.TRANSACTION_PARTIES_DISPUTED == reason) {
+      return "TRANSACTION_PARTIES_DISPUTED";
+    }
+    if(Reason.DISPUTE_BUSINESS_TRANSACTIONS == reason) {
+      return "DISPUTE_BUSINESS_TRANSACTIONS";
+    }
+    if(Reason.FINANCIAL_DISPUTED == reason) {
+      return "FINANCIAL_DISPUTED";
     }
     revert();
   }
@@ -389,8 +404,23 @@ contract DisputeBackchain {
   }
 
   function getReasonValue(string reason) private constant returns (Reason){
-    if(stringsEqual(reason,"INVALID")) {
-      return Reason.INVALID;
+    if(stringsEqual(reason,"HASH_NOT_FOUND")) {
+      return Reason.HASH_NOT_FOUND;
+    }
+    if(stringsEqual(reason,"INPUT_DISPUTED")) {
+      return Reason.INPUT_DISPUTED;
+    }
+    if(stringsEqual(reason,"TRANSACTION_DATE_DISPUTED")) {
+      return Reason.TRANSACTION_DATE_DISPUTED;
+    }
+    if(stringsEqual(reason,"TRANSACTION_PARTIES_DISPUTED")) {
+      return Reason.TRANSACTION_PARTIES_DISPUTED;
+    }
+    if(stringsEqual(reason,"DISPUTE_BUSINESS_TRANSACTIONS")) {
+      return Reason.DISPUTE_BUSINESS_TRANSACTIONS;
+    }
+    if(stringsEqual(reason,"FINANCIAL_DISPUTED")) {
+      return Reason.FINANCIAL_DISPUTED;
     }
     revert();
   }

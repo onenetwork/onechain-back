@@ -1,5 +1,5 @@
-var Backchain = artifacts.require("./Backchain.sol");
+var ContentBackchain = artifacts.require("./ContentBackchain.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(Backchain);
+  deployer.deploy(ContentBackchain);
 };

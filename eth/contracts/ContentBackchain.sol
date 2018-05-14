@@ -7,7 +7,7 @@ pragma solidity ^0.4.0;
 /// participating organizations, who can then hash and verify them later against
 /// the block chain to ensure they posted with the claimed content at the claimed time.
 /// This provides a mechanism for "transient trust" of the Orchestrator.
-contract Backchain {
+contract ContentBackchain {
 
   /// The Orchestrator is the only entity permitted to post hashes
   address public orchestrator;

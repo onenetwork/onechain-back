@@ -12,7 +12,7 @@ contract DisputeBackchain {
     bytes32 disputedTransactionId;
     bytes32[] disputedBusinessTransactionIds;
     uint submittedDate;
-    uint closeDate;
+    uint closedDate;
     State state;
     Reason reason;
   }
@@ -20,7 +20,7 @@ contract DisputeBackchain {
   address private orchestrator;
   bytes32[] private disputeIDs;
   mapping (bytes32 => Dispute) private disputeIdToDisputeMapping;
-  uint disputeSubmissionWindowInMinutes;
+  uint disputeSubmissionWindowInMinutes = 24 * 60;
 
   /**
    * get orchestrator
@@ -51,7 +51,7 @@ contract DisputeBackchain {
       disputeID = keccak256(disputingPartyAddress,disputedTransactionID, now);
     }
     require(verify(disputeID) == false);
-    disputeIdToDisputeMapping[disputeID] = Dispute({disputeId:disputeID, disputingParty:disputingPartyAddress, disputedTransactionId:disputedTransactionID, disputedBusinessTransactionIds:disputedBusinessTransactionIDs, submittedDate:now, closeDate:0, state:State.OPEN, reason:reasonValue});
+    disputeIdToDisputeMapping[disputeID] = Dispute({disputeId:disputeID, disputingParty:disputingPartyAddress, disputedTransactionId:disputedTransactionID, disputedBusinessTransactionIds:disputedBusinessTransactionIDs, submittedDate:now, closedDate:0, state:State.OPEN, reason:reasonValue});
     disputeIDs.push(disputeID);
   }
 
@@ -64,7 +64,7 @@ contract DisputeBackchain {
       if(dispute.state == State.OPEN) {
         require(msg.sender == dispute.disputingParty);
         dispute.state = State.CLOSED;
-        dispute.closeDate = now;
+        dispute.closedDate = now;
         require(disputeIdToDisputeMapping[id].state == State.CLOSED);
         return;
       }
@@ -93,12 +93,12 @@ contract DisputeBackchain {
   }
 
   /**
-   * get Detail information of Dispute (submittedDate, closeDate, state, reason)
+   * get Detail information of Dispute (submittedDate, closedDate, state, reason)
    */
   function getDisputeDetail(bytes32 id) public constant returns(uint, uint, string, string) {
     Dispute memory dispute = disputeIdToDisputeMapping[id];
     if (verify(dispute, id)) {
-      return (dispute.submittedDate, dispute.closeDate, getStateStringValue(dispute.state), getReasonStringValue(dispute.reason));
+      return (dispute.submittedDate, dispute.closedDate, getStateStringValue(dispute.state), getReasonStringValue(dispute.reason));
     }
     revert();
   }
@@ -277,7 +277,7 @@ contract DisputeBackchain {
             }
           }
           if ((bitCheck & 0x2) != 0) {
-            if(!(dispute.closeDate >= closedDateStart && dispute.closeDate <= closedDateEnd)) {
+            if(!(dispute.closedDate >= closedDateStart && dispute.closedDate <= closedDateEnd)) {
               continue;
             }
           }

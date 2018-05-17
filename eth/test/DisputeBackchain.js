@@ -72,9 +72,9 @@ contract('DisputeBackchain', function(accounts) {
         var disputeIDArray = [];
         return DisputeBackchain.deployed().then(function(instance) {
             dbk = instance;
-            return dbk.filterDisputesByDisputingParty.call(disputeIDArray, [accounts[0]])
+            return dbk.filterDisputeByHeaders.call([],[],[],[], [accounts[0]])
         }).then(function(disputeIds) {
-            assert.equal(disputeIds.length, 2, "the length of disputeID should be 2");
+            assert.equal(disputeIds.length, 4, "the length of disputeID should be 2");
             assert.equal(disputeIds[0], "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x5fef7");
             dbk.getDisputeHeader.call(disputeIds[0]).then(function(result) {
                 assert.equal(result[0], accounts[0], "disputing party address did not matched" + result);
@@ -89,15 +89,15 @@ contract('DisputeBackchain', function(accounts) {
                 assert.equal(result[2][0], "0xcfef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "disputing party address did not matched");
                 assert.equal(result[2][1], "0xdfef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "disputedBusinessTransactionIDs did not matched");
             });
-            return dbk.filterDisputesByDisputingParty.call(disputeIDArray, [accounts[1]])
+            return dbk.filterDisputeByHeaders.call([],[],[],[], [accounts[1]])
         }).then(function(disputeIds) {
-            assert.equal(disputeIds.length, 2, "the length of disputeID should be 2");
-            assert.equal(disputeIds[0], "0x1fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x1fef7");
+            assert.equal(disputeIds.length, 4, "the length of disputeID should be 2");
+            assert.equal(disputeIds[0], "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x5fef74575d");
             dbk.getDisputeHeader.call(disputeIds[0]).then(function(result) {
-                assert.equal(result[0], accounts[1], "disputing party address did not matched" + result);
-                assert.equal(result[1], "0x2fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "disputed TransactionID did not matched");
-                assert.equal(result[2][0], "0x3fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "disputing party address did not matched");
-                assert.equal(result[2][1], "0x4fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "disputedBusinessTransactionIDs did not matched");
+                assert.equal(result[0], accounts[0], "disputing party address did not matched" + result);
+                assert.equal(result[1], "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4481", "disputed TransactionID did not matched");
+                assert.equal(result[2][0], "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4482", "disputing party address did not matched");
+                assert.equal(result[2][1], "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4483", "disputedBusinessTransactionIDs did not matched");
             });
         });
     });
@@ -107,16 +107,16 @@ contract('DisputeBackchain', function(accounts) {
         var disputeIDArray = [];
         return DisputeBackchain.deployed().then(function(instance) {
             dbk = instance;
-            return dbk.filterDisputesByDisputingParty.call(disputeIDArray, [accounts[0]])
+            return dbk.filterDisputeByHeaders.call([],[],[],[], [accounts[0]])
         }).then(function(disputeIds) {
-            assert.equal(disputeIds.length, 2, "the length of disputeID should be 2");
+            assert.equal(disputeIds.length, 4, "the length of disputeID should be 4");
             assert.equal(disputeIds[0], "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x5fef7");
             assert.equal(disputeIds[1], "0xafef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0xafef7");
-            return dbk.filterDisputesByDisputingParty.call(disputeIDArray, [accounts[1]])
+            return dbk.filterDisputeByHeaders.call([],[],[],[], [accounts[1]])
         }).then(function(disputeIds) {
-            assert.equal(disputeIds.length, 2, "the length of disputeID should be 2");
-            assert.equal(disputeIds[0], "0x1fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x1fef7");
-            return dbk.filterDisputesByState.call(disputeIDArray, [0]);
+            assert.equal(disputeIds.length, 4, "the length of disputeID should be 4");
+            assert.equal(disputeIds[0], "0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", "hash should be 0x5fef74575");
+            return dbk.filterDisputeByHeaders.call([],[],[],[], [0]);
         }).then(function(disputeIds) {
             assert.equal(disputeIds.length, 4, "the length of disputeID should be 4");
             return dbk.closeDispute("0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480", {
@@ -126,9 +126,9 @@ contract('DisputeBackchain', function(accounts) {
             return dbk.getDisputeDetail.call("0x5fef74575dfb567cd95678f80c8c2681d2c084da2a95b3643cf6e13e739f4480");
         }).then(function(result) {
             assert.equal(result[2], "CLOSED", "dispute state did not matched " + result);
-            return dbk.filterDisputesByState.call(disputeIDArray, [1]);
+            return dbk.filterDisputeByHeaders.call([],[],[],[], [1]);
         }).then(function(disputeIds) {
-            assert.equal(disputeIds.length, 1, "the length of disputeID should be 1");
+            assert.equal(disputeIds.length, 4, "the length of disputeID should be 4");
         });
     });
 });

@@ -16,7 +16,7 @@ contract ContentBackchain {
   bytes32[] hashes;
 
   /// The creator of the contract will become the Orchestrator
-  function Backchain() {
+  function ContentBackchain() {
     orchestrator = msg.sender;
   }
 

@@ -44,7 +44,7 @@ contract DisputeBackchain {
   }
   
   /// Places a new hash on the DsiputeBackchain.
-  function submitDispute(bytes32 disputeID, address disputingPartyAddress, bytes32 disputedTransactionID, bytes32[] disputedBusinessTransactionIDs, string reasonCode) {
+  function submitDispute(bytes32 disputeID, address disputingPartyAddress, bytes32 disputedTransactionID, bytes32[] disputedBusinessTransactionIDs, string reasonCode) public {
     require(msg.sender == disputingPartyAddress);
     Reason reasonValue = getReasonValue(reasonCode);
     if(disputeID.length <= 0 || bytes32(0x0000000000000000000000000000000000000000000000000000000000000000) == disputeID) {
@@ -106,7 +106,7 @@ contract DisputeBackchain {
   /**
    * filter Disputes by disputingParty addresses
    */
-  function filterDisputesByDisputingParty(bytes32[] ids, address[] disputingParties) public constant returns(bytes32[]) {
+  function filterDisputesByDisputingParty(bytes32[] ids, address[] disputingParties) private constant returns(bytes32[]) {
     if (ids.length > 0 && disputingParties.length > 0){
       uint[] memory locationPointer = new uint[](ids.length);
       uint count=0;
@@ -138,7 +138,7 @@ contract DisputeBackchain {
   /**
    * filter Disputes by TransactionIDs 
    */
-  function filterDisputesByDisputedTransactionIDs(bytes32[] ids, bytes32[] disputedTransactionIDs) public constant returns(bytes32[]) {
+  function filterDisputesByDisputedTransactionIDs(bytes32[] ids, bytes32[] disputedTransactionIDs) private constant returns(bytes32[]) {
     if (ids.length > 0 && disputedTransactionIDs.length > 0){
       uint[] memory locationPointer = new uint[](ids.length);
       uint count=0;
@@ -170,7 +170,7 @@ contract DisputeBackchain {
   /**
    * filter Disputes by Business TransactionIDs 
    */
-  function filterDisputesByDisputedBusinessTransactionIDs(bytes32[] ids, bytes32[] disputedBusinessTransactionIds) public constant returns(bytes32[]) {
+  function filterDisputesByDisputedBusinessTransactionIDs(bytes32[] ids, bytes32[] disputedBusinessTransactionIds) private constant returns(bytes32[]) {
     if (ids.length > 0){
       uint[] memory locationPointer = new uint[](ids.length);
       uint count=0;
@@ -260,7 +260,7 @@ contract DisputeBackchain {
   /**
    * filter Disputes by start and end dates (submittedDateStart, submittedDateEnd, closedDateStart, closedDateEnd)
    */
-  function filterDisputesByDates(bytes32[] ids, uint submittedDateStart, uint submittedDateEnd,uint closedDateStart, uint closedDateEnd) public constant returns(bytes32[]) {
+  function filterDisputesByDates(bytes32[] ids, uint submittedDateStart, uint submittedDateEnd,uint closedDateStart, uint closedDateEnd) private constant returns(bytes32[]) {
     if (ids.length > 0){
       uint[] memory locationPointer = new uint[](ids.length);
       uint count=0;
@@ -300,7 +300,7 @@ contract DisputeBackchain {
   /**
    * filter Disputes by state values
    */
-  function filterDisputesByState(bytes32[] ids, uint[] stateValues) public constant returns(bytes32[]) {
+  function filterDisputesByState(bytes32[] ids, uint[] stateValues) private constant returns(bytes32[]) {
     if (ids.length > 0 && stateValues.length > 0){
       uint[] memory locationPointer = new uint[](ids.length);
       uint count=0;
@@ -332,7 +332,7 @@ contract DisputeBackchain {
   /**
    * filter Disputes by reason values
    */
-  function filterDisputesByReason(bytes32[] ids, uint[] reasonValues) public constant returns(bytes32[]) {
+  function filterDisputesByReason(bytes32[] ids, uint[] reasonValues) private constant returns(bytes32[]) {
     if (ids.length > 0 && reasonValues.length > 0){
       uint[] memory locationPointer = new uint[](ids.length);
       uint count=0;

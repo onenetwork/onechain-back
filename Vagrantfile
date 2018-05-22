@@ -37,10 +37,10 @@ Vagrant.configure("2") do |config|
 
     # Install various etherium tools
     sudo npm install -g sync-exec
-    sudo npm install -g ethereumjs-testrpc
     sudo npm install -g solc
     sudo npm install -g web3
     sudo npm install -g truffle@3.4.3
+    sudo npm install -g ganache-cli
 
     sudo printf "\n192.168.201.55\tbackchain-vagrant.onenetwork.com\n" >> /etc/hosts
     

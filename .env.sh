@@ -22,7 +22,7 @@ bk() {
     less +F /home/vagrant/log/testrpc.log
   elif [ "$1" = 'start' ]; then
     echo "Starting testrpc ..."
-    testrpc  --account="0x8ad0132f808d0830c533d7673cd689b7fde2d349ff0610e5c04ceb9d6efb4eb1, 10000000000000000000" --account="0x69bc764651de75758c489372c694a39aa890f911ba5379caadc08f44f8173051, 10000000000000000000"  2>&1 >> /home/vagrant/log/testrpc.log & 2>&1 >> /home/vagrant/log/testrpc.log &
+    testrpc -l 4500000000000 --account="0x8ad0132f808d0830c533d7673cd689b7fde2d349ff0610e5c04ceb9d6efb4eb1, 10000000000000000000" --account="0x69bc764651de75758c489372c694a39aa890f911ba5379caadc08f44f8173051, 10000000000000000000"  2>&1 >> /home/vagrant/log/testrpc.log & 2>&1 >> /home/vagrant/log/testrpc.log &
     pushd . > /dev/null
     cd /vagrant/eth
     printf "Test backchain server available at http://192.168.201.55:8545

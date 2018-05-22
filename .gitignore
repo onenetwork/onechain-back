@@ -4,4 +4,5 @@ log/
 node_modules/
 .gradle
 onechain-back-client
+.truffle.migrate.log
 

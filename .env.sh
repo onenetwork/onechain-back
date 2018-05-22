@@ -22,14 +22,17 @@ bk() {
     less +F /home/vagrant/log/testrpc.log
   elif [ "$1" = 'start' ]; then
     echo "Starting testrpc ..."
-    testrpc -m "uncle kick case ankle crush garbage pumpkin shiver index critic like slight" 2>&1 >> /home/vagrant/log/testrpc.log &
+    testrpc  --account="0x8ad0132f808d0830c533d7673cd689b7fde2d349ff0610e5c04ceb9d6efb4eb1, 10000000000000000000" --account="0x69bc764651de75758c489372c694a39aa890f911ba5379caadc08f44f8173051, 10000000000000000000"  2>&1 >> /home/vagrant/log/testrpc.log & 2>&1 >> /home/vagrant/log/testrpc.log &
     pushd . > /dev/null
     cd /vagrant/eth
-    truffle migrate | grep 'Backchain:.*' | grep -o '0x.*' | xargs -i printf "
-Test backchain server available at http://192.168.201.55:8545
-Backchain contract address is %s
+    printf "Test backchain server available at http://192.168.201.55:8545
 Orchestrator private key is 0x8ad0132f808d0830c533d7673cd689b7fde2d349ff0610e5c04ceb9d6efb4eb1
-Sample participant private key is 0x69bc764651de75758c489372c694a39aa890f911ba5379caadc08f44f8173051\n" {}
+Sample participant private key is 0x69bc764651de75758c489372c694a39aa890f911ba5379caadc08f44f8173051\n"
+    truffle migrate > .truffle.migrate.log
+    grep 'ContentBackchain:.*' .truffle.migrate.log | grep -o '0x.*' | xargs -i printf "
+ContentBackchain contract address is %s\n" {}
+    grep 'DisputeBackchain:.*' .truffle.migrate.log | grep -o '0x.*' | xargs -i printf "
+DisputeBackchain contract address is %s\n" {}
     popd > /dev/null
   elif [ "$1" = 'stop' ]; then
     BKPROC=$(ps -ef | grep testrpc | grep -v grep | awk '{print $2;}')

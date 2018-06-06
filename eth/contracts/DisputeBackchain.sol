@@ -51,7 +51,7 @@ contract DisputeBackchain {
       disputeID = keccak256(disputingPartyAddress,disputedTransactionID, now);
     }
     require(verify(disputeID) == false);
-    disputeIdToDisputeMapping[disputeID] = Dispute({disputeId:disputeID, disputingParty:disputingPartyAddress, disputedTransactionId:disputedTransactionID, disputedBusinessTransactionIds:disputedBusinessTransactionIDs, submittedDate:now, closedDate:0, state:State.OPEN, reason:reasonValue});
+    disputeIdToDisputeMapping[disputeID] = Dispute({disputeId:disputeID, disputingParty:disputingPartyAddress, disputedTransactionId:disputedTransactionID, disputedBusinessTransactionIds:disputedBusinessTransactionIDs, submittedDate:currentTimeMillis(), closedDate:0, state:State.OPEN, reason:reasonValue});
     disputeIDs.push(disputeID);
   }
 
@@ -64,7 +64,7 @@ contract DisputeBackchain {
       if(dispute.state == State.OPEN) {
         require(msg.sender == dispute.disputingParty);
         dispute.state = State.CLOSED;
-        dispute.closedDate = now;
+        dispute.closedDate = currentTimeMillis();
         require(disputeIdToDisputeMapping[id].state == State.CLOSED);
         return;
       }
@@ -425,7 +425,12 @@ contract DisputeBackchain {
     revert();
   }
 
-   /// Check string are equal
+  /// get current time in millisecond
+  function currentTimeMillis() private constant returns (uint) {
+    return now * 1000;
+  }
+
+  /// Check string are equal
   function stringsEqual(string _a, string _b) private constant returns (bool) {
     bytes memory a = bytes(_a);
     bytes memory b = bytes(_b);

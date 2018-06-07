@@ -41,6 +41,7 @@ Vagrant.configure("2") do |config|
     sudo npm install -g web3
     sudo npm install -g truffle@3.4.3
     sudo npm install -g ganache-cli
+    sudo npm install -g mocha
 
     sudo printf "\n192.168.201.55\tbackchain-vagrant.onenetwork.com\n" >> /etc/hosts
     

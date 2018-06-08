@@ -64,6 +64,7 @@ func (s *ContentBackChain) post(APIstub shim.ChaincodeStubInterface, args []stri
 
         APIstub.PutState(args[0], []byte(args[0]))
 
+        // Increment NUMBER_OF_HASHES count by 1
         hashCountAsBytes, _ := APIstub.GetState(NUMBER_OF_HASHES)
         hashCountAsString := string(hashCountAsBytes)
         hashCount, _ := strconv.ParseInt(hashCountAsString, 10, 64)

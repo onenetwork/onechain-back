@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright One Network Enterprises. All Rights Reserved
+# Copyright One Network Enterprises. All Rights Reserved.
 #
 #
 export PATH=$GOPATH/src/github.com/hyperledger/fabric/build/bin:${PWD}/../bin:${PWD}:$PATH

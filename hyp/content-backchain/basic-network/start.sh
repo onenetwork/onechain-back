@@ -17,11 +17,9 @@ if [ "$LANGUAGE" = "node" -o "$LANGUAGE" = "NODE" ]; then
 fi
 
 # clean the keystore
-rm -rf ./hfc-key-store
+rm -rf ../client/hfc-key-store
 
 # launch network; create channel and join peer to channel
-cd ../basic-network
-
 docker-compose -f docker-compose.yml up -d ca.contentbackchain.com orderer.contentbackchain.com peer0.orchestratororg.contentbackchain.com peer0.participantorg.contentbackchain.com couchdb
 
 # wait for Hyperledger Fabric to start

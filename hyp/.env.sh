@@ -2,17 +2,12 @@
 
 export PS1="\[\e]0;\w\a\]\n\[\e[34m\]*\h* \[\e[33m\]\w\[\e[0m\]\n\$ "
 
-export PATH=$PATH:/vagrant/content-backchain/bin
+export PATH=$PATH:/home/vagrant/onechain-back/hyp/content-backchain/basic-network/bin
 
 alias e=vim
 export LS_COLORS='ow=01;36;40'
 
-cd /home/vagrant/content-backchain/basic-network/
-./generate.sh
-cd ../client
-npm install
-
-cd /home/vagrant/content-backchain/basic-network/
+cd /home/vagrant/onechain-back/hyp/content-backchain/basic-network
 
 echo
 echo
@@ -27,8 +22,8 @@ bk() {
   elif [ "$1" = 'start' ]; then
     echo "Starting Hyperledger Fabric ..."
     ./start.sh
-    cd ../client
-    printf "TODO : Hyperledger changes Test backchain server available at http://192.168.201.55:8545
+    
+    printf "TODO Hyperledger changes : Test backchain server available at http://192.168.201.55:8545
             Orchestrator private key is 0x8ad0132f808d0830c533d7673cd689b7fde2d349ff0610e5c04ceb9d6efb4eb1
             Sample participant private key is 0x69bc764651de75758c489372c694a39aa890f911ba5379caadc08f44f8173051\n"
  

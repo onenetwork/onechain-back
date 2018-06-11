@@ -8,6 +8,12 @@ alias e=vim
 export LS_COLORS='ow=01;36;40'
 
 cd /home/vagrant/onechain-back/hyp/content-backchain/basic-network
+sudo chmod +x ./generate.sh ./start.sh ./stop.sh
+
+# Generate certificates and docker-compose-yml file with new key if it is not done yet.
+if [[ ! -d "crypto-config" ]]; then
+	./generate.sh
+fi
 
 echo
 echo

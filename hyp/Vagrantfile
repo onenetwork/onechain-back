@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
 
-  config.vm.network "private_network", ip: "192.168.201.56"
+  config.vm.network "private_network", ip: "192.168.201.55"
 
   config.vm.synced_folder "C:/Views/onechain-back/hyp", "/vagrant", type: "virtualbox"
 
@@ -34,31 +34,25 @@ Vagrant.configure("2") do |config|
     sudo apt-get -y install nodejs
     sudo apt-get -y install npm
 
-    # TODO: node bin :- export PATH=$PATH:<your_nodejs_path_e.g._/opt/ibm/node>/bin
+    # TODO: export node bin :- export PATH=$PATH:<your_nodejs_path_e.g._/opt/ibm/node>/bin
 
-    # TODO: go path :- export PATH=$PATH:<your_nodejs_path_e.g._/opt/ibm/node>/bin:/usr/local/docker:/usr/local/go/bin
-
-       
     sudo printf "\n192.168.201.56\tbackchain-vagrant.onenetwork.com\n" >> /etc/hosts
+	
+	curl -sSL https://goo.gl/6wtTN5 | bash -s 1.1.0
 
-    mkdir /home/vagrant/log
-     
     sudo chown -R vagrant /vagrant
-    
+   
     sudo su - vagrant
 
     # Pull onechain-back repository 
     git clone https://github.com/onenetwork/onechain-back.git
-   
-    sudo chmod +x /home/vagrant/onechain-back/hyp/content-backchain/basic-network
+
+    sudo chown -R vagrant /home/vagrant/onechain-back/hyp/content-backchain
     cd /home/vagrant/onechain-back/hyp/content-backchain/basic-network/
 
     # Pull Hyperledger binaries into bin 
     git clone https://github.com/rslu2000/hyperledger-fabric-binary.git bin
 
-    # Generate certificates and docker-compose-yml file with new key
-    sudo ./generate.sh
-    
     printf ". ~/.bashrc\ncd /vagrant\n. .env.sh\n" >> /home/vagrant/.bash_profile
     
     printf "\n\n=== Provisioning Complete ===\n"

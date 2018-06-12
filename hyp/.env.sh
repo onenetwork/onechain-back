@@ -6,6 +6,7 @@ export PATH=$PATH:/home/vagrant/onechain-back/hyp/content-backchain/basic-networ
 
 alias e=vim
 export LS_COLORS='ow=01;36;40'
+export COMPOSE_PROJECT_NAME=net
 
 cd /home/vagrant/onechain-back/hyp/content-backchain/basic-network
 sudo chmod +x ./generate.sh ./start.sh ./stop.sh

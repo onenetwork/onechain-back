@@ -15,6 +15,9 @@ services:
       - FABRIC_CA_SERVER_CA_NAME=ca.contentbackchain.com
       - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.orchestratororg.contentbackchain.com-cert.pem
       - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA_PRIVATE_KEY
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.orchestratororg.contentbackchain.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA_PRIVATE_KEY
     ports:
       - "7054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
@@ -34,6 +37,10 @@ services:
       - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/msp/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/msp/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/msp/orderer/tls/ca.crt, /etc/hyperledger/crypto/peerOrchestratorOrg/tls/ca.crt, /etc/hyperledger/crypto/peerParticipantOrg/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
     command: orderer
     ports:
@@ -41,7 +48,8 @@ services:
     volumes:
         - ./config/:/etc/hyperledger/configtx
         - ./crypto-config/ordererOrganizations/contentbackchain.com/orderers/orderer.contentbackchain.com/:/etc/hyperledger/msp/orderer
-        - ./crypto-config/peerOrganizations/orchestratororg.contentbackchain.com/peers/peer0.orchestratororg.contentbackchain.com/:/etc/hyperledger/msp/peerOrchestratorOrg
+        - ./crypto-config/peerOrganizations/orchestratororg.contentbackchain.com/peers/peer0.orchestratororg.contentbackchain.com/:/etc/hyperledger/crypto/peerOrchestratorOrg
+        - ./crypto-config/peerOrganizations/participantorg.contentbackchain.com/peers/peer0.participantorg.contentbackchain.com/:/etc/hyperledger/crypto/peerParticipantOrg
     networks:
       - basic
 
@@ -53,6 +61,11 @@ services:
       - CORE_PEER_ID=peer0.orchestratororg.contentbackchain.com
       - CORE_LOGGING_PEER=debug
       - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
       - CORE_PEER_LOCALMSPID=OrchestratorOrgMSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
       - CORE_PEER_ADDRESS=peer0.orchestratororg.contentbackchain.com:7051
@@ -67,6 +80,10 @@ services:
       # match the username and password set for the associated CouchDB.
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/crypto/peer/tls/server.key
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/crypto/peer/tls/server.crt
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/crypto/peer/tls/ca.crt
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: peer node start
     # command: peer node start --peer-chaincodedev=true
@@ -79,6 +96,9 @@ services:
         - ./crypto-config/peerOrganizations/orchestratororg.contentbackchain.com/users:/etc/hyperledger/msp/users
         - ./crypto-config/peerOrganizations/participantorg.contentbackchain.com/users:/etc/hyperledger/participantorg/msp/users
         - ./config:/etc/hyperledger/configtx
+        - ./crypto-config/peerOrganizations/orchestratororg.contentbackchain.com/peers/peer0.orchestratororg.contentbackchain.com/:/etc/hyperledger/crypto/peer
+        - ./crypto-config/ordererOrganizations/contentbackchain.com/orderers/orderer.contentbackchain.com/msp/tlscacerts/:/opt/gopath/src/github.com/hyperledger/fabric/peer/tlscacerts
+        - ./crypto-config/peerOrganizations/participantorg.contentbackchain.com/peers/peer0.participantorg.contentbackchain.com/:/etc/hyperledger/crypto/peerParticipantOrg
     depends_on:
       - orderer.contentbackchain.com
       - couchdb
@@ -93,7 +113,12 @@ services:
       - CORE_PEER_ID=peer0.participantorg.contentbackchain.com
       - CORE_LOGGING_PEER=debug
       - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_LOCALMSPID=ParticipantOrgMSP
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
       - CORE_PEER_ADDRESS=peer0.participantorg.contentbackchain.com:7051
       # # the following setting starts chaincode containers on the same
@@ -107,6 +132,10 @@ services:
       # match the username and password set for the associated CouchDB.
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/crypto/peer/tls/server.key
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/crypto/peer/tls/server.crt
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/crypto/peer/tls/ca.crt
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: peer node start
     # command: peer node start --peer-chaincodedev=true
@@ -118,6 +147,7 @@ services:
         - ./crypto-config/peerOrganizations/participantorg.contentbackchain.com/peers/peer0.participantorg.contentbackchain.com/msp:/etc/hyperledger/msp/peer
         - ./crypto-config/peerOrganizations/participantorg.contentbackchain.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx
+        - ./crypto-config/peerOrganizations/participantorg.contentbackchain.com/peers/peer0.participantorg.contentbackchain.com/:/etc/hyperledger/crypto/peer
     depends_on:
       - orderer.contentbackchain.com
       - couchdb
@@ -151,12 +181,22 @@ services:
       - CORE_PEER_LOCALMSPID=OrchestratorOrgMSP
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orchestratororg.contentbackchain.com/users/admin@orchestratororg.contentbackchain.com/msp
       - CORE_CHAINCODE_KEEPALIVE=10
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      # The following setting skips the gossip handshake since we are
+      # are not doing mutual TLS
+      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/crypto/peer/tls/server.key
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/crypto/peer/tls/server.crt
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/crypto/peer/tls/ca.crt
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash
     volumes:
         - /var/run/:/host/var/run/
         - ./../chaincode/:/opt/gopath/src/github.com/
         - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ./crypto-config/peerOrganizations/orchestratororg.contentbackchain.com/peers/peer0.orchestratororg.contentbackchain.com/:/etc/hyperledger/crypto/peer
     networks:
         - basic
     depends_on:

@@ -10,3 +10,6 @@ set -ev
 docker-compose -f docker-compose.yml stop
 docker rm -f $(docker ps -aq)
 docker network prune -f
+
+pkill node
+echo

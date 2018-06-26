@@ -54,10 +54,33 @@ fi
 cp docker-compose-template.yml docker-compose.yml
 
 # The next steps will replace the template's contents with the
-# actual values of the private key file names for the two CAs.
+# actual values of the private key file names for CAs.
 CURRENT_DIR=$PWD
 cd crypto-config/peerOrganizations/orchestratororg.contentbackchain.com/ca/
 PRIV_KEY=$(ls *_sk)
 cd "$CURRENT_DIR"
 sed -i "s/CA_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose.yml
+
+# Generate network-config for WebAppServer
+cd ../server/artifacts
+SERVER_DIR=$PWD
+cp network-config-template.yaml network-config.yaml
+
+# Replace the network-config template's contents with the
+# actual values of the private key file names for the OrchestraotrOrg and ParticioantOrg Admins.
+cd "$CURRENT_DIR"
+cd crypto-config/peerOrganizations/orchestratororg.contentbackchain.com/users/Admin@orchestratororg.contentbackchain.com/msp/keystore/
+ADMIN1_PRIV_KEY=$(ls *_sk)
+cd "$SERVER_DIR"
+sed -i "s/ORCHESTRATOR_ADMIN_KEY/${ADMIN1_PRIV_KEY}/g" network-config.yaml
+
+cd "$CURRENT_DIR"
+cd crypto-config/peerOrganizations/participantorg.contentbackchain.com/users/Admin@participantorg.contentbackchain.com/msp/keystore/
+ADMIN2_PRIV_KEY=$(ls *_sk)
+cd "$SERVER_DIR"
+sed -i "s/PARTICIPANT_ADMIN_KEY/${ADMIN2_PRIV_KEY}/g" network-config.yaml
+
+cd "$CURRENT_DIR"
+
+
 

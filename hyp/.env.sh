@@ -25,7 +25,7 @@ echo
 
 bk() {
   if [ "$1" = 'log' ]; then
-    docker logs -f peer0.orchestratororg.contentbackchain.com
+    less +F ../server/server.log
   elif [ "$1" = 'start' ]; then
     echo "Starting Hyperledger Fabric ..."
     ./start.sh

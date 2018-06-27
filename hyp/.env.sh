@@ -9,7 +9,7 @@ export LS_COLORS='ow=01;36;40'
 export COMPOSE_PROJECT_NAME=net
 
 cd /home/vagrant/onechain-back/hyp/content-backchain/basic-network
-sudo chmod +x ./generate.sh ./start.sh ./stop.sh
+sudo chmod +x ./generate.sh ./start.sh ./stop.sh ../server/./runApp.sh
 
 # Generate certificates and docker-compose-yml file with new key if it is not done yet.
 if [[ ! -d "crypto-config" ]]; then
@@ -30,14 +30,10 @@ bk() {
     echo "Starting Hyperledger Fabric ..."
     ./start.sh
     
-    printf "TODO Hyperledger changes : Test backchain server available at http://192.168.201.55:8545
-            Orchestrator private key is 0x8ad0132f808d0830c533d7673cd689b7fde2d349ff0610e5c04ceb9d6efb4eb1
-            Sample participant private key is 0x69bc764651de75758c489372c694a39aa890f911ba5379caadc08f44f8173051\n"
- 
-   elif [ "$1" = 'stop' ]; then
+  elif [ "$1" = 'stop' ]; then
    ./stop.sh
     echo "Stopped"
-    rm -f /home/vagrant/log/fabric.log
+    rm -f ../server/server.log
   else
     echo "usage: bk <command>"
     echo

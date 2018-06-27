@@ -9,7 +9,7 @@ function installNodeModules() {
 
 function registerUsers(){
 	echo "============== Enrolling Users ============="
-	sleep 2
+	sleep 5
 	ORG1_TOKEN=$(curl -s -X POST \
   		http://localhost:4000/users \
 	  	-H "content-type: application/x-www-form-urlencoded" \

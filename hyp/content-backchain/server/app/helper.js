@@ -25,7 +25,7 @@ var sleep = async function (sleep_time_ms) {
 }
 
 async function getClientForOrg (userorg, username) {
-	logger.debug('getClientForOrg - ****** START %s %s', userorg, username)
+	logger.debug('getClientForOrg - ****** START %s %s', userorg)
 	// get a fabric client loaded with a connection profile for this org
 	let config = '-connection-profile-path';
 
@@ -56,7 +56,7 @@ async function getClientForOrg (userorg, username) {
 			logger.debug('User %s was found to be registered and enrolled', username);
 		}
 	}
-	logger.debug('getClientForOrg - ****** END %s %s \n\n', userorg, username)
+	logger.debug('getClientForOrg - ****** END %s %s \n\n', userorg)
 
 	return client;
 }

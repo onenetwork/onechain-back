@@ -2,7 +2,7 @@ function installNodeModules() {
 	echo
 	if [[ ! -d node_modules ]]; then
 		echo "============== Installing node modules ============="
-		sudo npm install
+		npm install
 	fi
 	echo
 }
@@ -27,21 +27,21 @@ function registerUsers(){
 }
 
 function startServer(){
-	PORT=4000 node app 
+	PORT=4000 node app &> server.log
 }
 
 function displayInfo(){
 	echo
-	echo "Orchestrator private key is $ORG1_TOKEN"
+	echo "OrchestratorOrg User token - $ORG1_TOKEN"
 	echo
-	echo "Participant private key is $ORG2_TOKEN"
+	echo "ParticipantOrg User token - $ORG2_TOKEN"
 	echo
-	echo "Test backchain server available at http://localhost:4000"
+	echo "Url - http://localhost:4000"
 }
 
 installNodeModules
 
-startServer > server.log & registerUsers 
+startServer & registerUsers 
 
 
 

@@ -128,7 +128,6 @@ app.post('/users', async function(req, res) {
 // Invoke transaction on chaincode on target peers
 app.post('/invoke', async function(req, res) {
 	logger.debug('==================== INVOKE ON CHAINCODE ==================');
-	var peers = req.body.peers;
 	var chaincodeName = app.get('chaincodeName');
 	var channelName = app.get('channelName');
 	var fcn = req.body.fcn;
@@ -154,7 +153,7 @@ app.post('/invoke', async function(req, res) {
 		return;
 	}
 
-	let message = await invoke.invokeChaincode(peers, channelName, chaincodeName, fcn, [args], req.username, req.orgname);
+	let message = await invoke.invokeChaincode(channelName, chaincodeName, fcn, [args], req.username, req.orgname);
 	res.send(message);
 });
 // Query on chaincode on target peers
@@ -188,6 +187,6 @@ app.get('/query', async function(req, res) {
 		return;
 	}
 
-	let message = await query.queryChaincode(peer, channelName, chaincodeName, [args], fcn, req.username, req.orgname);
+	let message = await query.queryChaincode(channelName, chaincodeName, [args], fcn, req.username, req.orgname);
 	res.send(message);
 });

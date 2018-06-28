@@ -10,11 +10,11 @@ var hfc = require('fabric-client');
 var helper = require('./helper.js');
 var logger = helper.getLogger('Query');
 
-var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn, username, org_name) {
+var queryChaincode = async function(channelName, chaincodeName, args, fcn, username, org_name) {
 	try {
 		// first setup the client for this org
 		var client = await helper.getClientForOrg(org_name, username);
-		logger.debug('Successfully got the fabric client for the organization "%s"', org_name);
+		logger.debug('Successfully got the fabric client for the organization "%s" and user "%s"', org_name, username);
 		var channel = client.getChannel(channelName);
 		if(!channel) {
 			let message = util.format('Channel %s was not defined in the connection profile', channelName);
@@ -24,7 +24,6 @@ var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn,
 
 		// send query
 		var request = {
-			targets : [peer], //queryByChaincode allows for multiple targets
 			chaincodeId: chaincodeName,
 			fcn: fcn,
 			args: args

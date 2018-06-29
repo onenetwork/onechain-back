@@ -34,14 +34,14 @@ app.use(bodyParser.urlencoded({
 }));
 
 // set secret variable
-app.set('secret', '1Network!');
+app.set('secret', 'secret');
 // set channelName variable
 app.set('channelName', 'contentbackchainchannel');
 // set chainCodeName variable
 app.set('chaincodeName', 'ContentBackChain');
 
 app.use(expressJWT({
-	secret: '1Network!'
+	secret: 'secret'
 }).unless({
 	path: ['/users']
 }));

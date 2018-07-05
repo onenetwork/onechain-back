@@ -1,10 +1,12 @@
+let url = process.argv[2];
+let orchestratorAcct = process.argv[3];
+let orchestratorPass = process.argv[4];
+
 let fs = require("fs");
 let Web3 = require('web3');
 let web3 = new Web3();
-web3.setProvider(new web3.providers.HttpProvider('http://public-lb-ethereum-testnet-477233981.us-east-2.elb.amazonaws.com:8545'));
+web3.setProvider(new web3.providers.HttpProvider(url));
 
-let orchestratorAcct = process.argv[2];
-let orchestratorPass = process.argv[3];
 
 web3.eth.personal.unlockAccount(orchestratorAcct, orchestratorPass, 120).then(function() {
   console.info('Orchestrator account authenticated.');

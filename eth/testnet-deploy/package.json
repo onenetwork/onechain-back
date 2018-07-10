@@ -1,0 +1,12 @@
+{
+  "name": "@onenetwork/testnet-deploy",
+  "version": "0.1.0",
+  "description": "deploy backchain contracts to ethereum testnet",
+  "main": "deploy-all.js",
+  "author": "onenetwork",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "web3": "1.0.0-beta.34",
+    "request-promise": "^4.2.2"
+  }
+}

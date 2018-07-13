@@ -9,7 +9,7 @@ Licensed under the [Apache License, version 2.0](http://www.apache.org/licenses/
 
 ## Setup
 
-### Etherium Network 
+#### Etherium Network 
 Setup for Windows environments:
  * install [VirtualBox](https://www.virtualbox.org/)
  * install [Vagrant](https://www.vagrantup.com/)
@@ -38,7 +38,7 @@ Setup for Windows environments:
 ## Developing
 The current version supports [Ethereum](https://ethereum.org/)-based and [HyperLedger Fabric](https://www.hyperledger.org/projects/fabric/)-based implementations of the blockchain.
 
-### Etherium Network 
+#### Etherium Network 
 A test server is started by default when you start the vagrant box.  At the end of provisioning, you will see something like this, which tells you the IP/port, smart contract address, and private key values:
 ```
 ==> default: Test backchain server available at http://192.168.201.55:8545

@@ -66,7 +66,7 @@ truffle compile
 truffle migrate
 truffle test
 ```
-### Hyperledger Fabric Network 
+#### Hyperledger Fabric Network 
 A test server is started by default when you start the vagrant box.  At the end of provisioning, you will see something like this, which tells you the IP/port and token values:
 ```
 OrchestratorOrg User token - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzE1MjE4MDMsInVzZXJuYW1lIjoiT3JjaGVzdHJhdG9yVXNlciIsIm9yZ05hbWUiOiJPcmNoZXN0cmF0b3JPcmciLCJpYXQiOjE1MzE0ODU4MDN9.iL5ClwJ4YjAo0m4AOIt4XwanmkBbZKPXEcHl4UcarG4

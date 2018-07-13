@@ -4,6 +4,7 @@
 # Copyright One Network Enterprises. All Rights Reserved
 #
 #
+
 # Exit on first error
 set -e
 
@@ -17,14 +18,12 @@ if [ "$LANGUAGE" = "node" -o "$LANGUAGE" = "NODE" ]; then
 fi
 
 # launch network; create channel and join peer to channel
-docker-compose -f docker-compose.yml up -d ca.contentbackchain.com orderer.contentbackchain.com peer0.orchestratororg.contentbackchain.com peer0.participantorg.contentbackchain.com couchdb
+docker-compose -f docker-compose.yml up -d orchestrator-ca.contentbackchain.com participant-ca.contentbackchain.com orderer.contentbackchain.com peer0.orchestratororg.contentbackchain.com peer0.participantorg.contentbackchain.com couchdb
 
 
 # wait for Hyperledger Fabric to start
 # incase of errors when running later commands, issue export FABRIC_START_TIMEOUT=<larger number>
-export FABRIC_START_TIMEOUT=10
-#echo ${FABRIC_START_TIMEOUT}
-sleep ${FABRIC_START_TIMEOUT}
+sleep 15
 
 # Create the channel
 docker exec -e "CORE_PEER_LOCALMSPID=OrchestratorOrgMSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@orchestratororg.contentbackchain.com/msp" peer0.orchestratororg.contentbackchain.com peer channel create -o orderer.contentbackchain.com:7050 -c contentbackchainchannel -f /etc/hyperledger/configtx/channel.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/tlscacerts/tlsca.contentbackchain.com-cert.pem
@@ -49,13 +48,8 @@ CURRENT_DIR=$PWD
 #Start server
 ./runServer.sh &
 
-cd ../server
-#Cleanup the stores
-sudo rm -rf ./fabric-client-kv-*
-
 #Register users
-echo "============== Enrolling Users ============="
-sleep 5
+sleep 10
 ORG1_TOKEN=$(curl -s -X POST \
   		http://localhost:4000/users \
 	  	-H "content-type: application/x-www-form-urlencoded" \

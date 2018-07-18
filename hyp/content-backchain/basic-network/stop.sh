@@ -7,9 +7,9 @@
 set -ev
 
 # Shut down the Docker containers that might be currently running.
-docker-compose -f docker-compose.yml stop
+docker-compose -f docker-compose.yml down
 docker rm -f $(docker ps -aq)
-docker network prune -f
-
+docker rmi -f $(docker images | grep "dev\|none\|test-vp\|peer[0-9]-" | awk '{print $3}')
+#Cleanup the stores
+rm -rf ../server/fabric-client-kv-*
 pkill node
-echo

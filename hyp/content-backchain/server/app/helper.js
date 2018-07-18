@@ -89,7 +89,7 @@ var getRegisteredUser = async function(username, userOrg, isJson) {
 			if (isJson && isJson === true) {
 				var response = {
 					success: true,
-					secret: user._enrollmentSecret,
+					publicKey: user.getSigningIdentity()._publicKey.toBytes(),
 					message: username + ' enrolled Successfully',
 				};
 				return response;

@@ -57,9 +57,14 @@ cp docker-compose-template.yml docker-compose.yml
 # actual values of the private key file names for CAs.
 CURRENT_DIR=$PWD
 cd crypto-config/peerOrganizations/orchestratororg.contentbackchain.com/ca/
-PRIV_KEY=$(ls *_sk)
+PRIV_KEY1=$(ls *_sk)
 cd "$CURRENT_DIR"
-sed -i "s/CA_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose.yml
+sed -i "s/CA_PRIVATE_KEY1/${PRIV_KEY1}/g" docker-compose.yml
+
+cd crypto-config/peerOrganizations/participantorg.contentbackchain.com/ca/
+PRIV_KEY2=$(ls *_sk)
+cd "$CURRENT_DIR"
+sed -i "s/CA_PRIVATE_KEY2/${PRIV_KEY2}/g" docker-compose.yml
 
 # Generate network-config for WebAppServer
 cd ../server/artifacts

@@ -98,7 +98,7 @@ organizations:
     # dynamic certificate management (enroll, revoke, re-enroll). The following section is only for
     # Fabric-CA servers.
     certificateAuthorities:
-      - ca.contentbackchain.com
+      - orchestrator-ca.contentbackchain.com
 
     # [Optional]. If the application is going to make requests that are reserved to organization
     # administrators, including creating/updating channels, installing/instantiating chaincodes, it
@@ -122,7 +122,7 @@ organizations:
     peers:
       - peer0.participantorg.contentbackchain.com
     certificateAuthorities:
-      - ca.contentbackchain.com
+      - participant-ca.contentbackchain.com
     adminPrivateKey:
       path: ../basic-network/crypto-config/peerOrganizations/participantorg.contentbackchain.com/users/Admin@participantorg.contentbackchain.com/msp/keystore/PARTICIPANT_ADMIN_KEY
     signedCert:
@@ -179,7 +179,7 @@ peers:
 # Certificate Authority instead of Fabric-CA, in which case this section would not be specified.
 #
 certificateAuthorities:
-  ca.contentbackchain.com:
+  orchestrator-ca.contentbackchain.com:
     url: https://localhost:7054
     # the properties specified under this object are passed to the 'http' client verbatim when
     # making the request to the Fabric-CA server
@@ -194,4 +194,21 @@ certificateAuthorities:
       - enrollId: admin
         enrollSecret: adminpw
     # [Optional] The optional name of the CA.
-    caName: ca.contentbackchain.com
+    caName: orchestrator-ca.contentbackchain.com
+
+  participant-ca.contentbackchain.com:
+    url: https://localhost:8054
+    # the properties specified under this object are passed to the 'http' client verbatim when
+    # making the request to the Fabric-CA server
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: ../basic-network/crypto-config/peerOrganizations/participantorg.contentbackchain.com/ca/ca.participantorg.contentbackchain.com-cert.pem
+
+    # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
+    # needed to enroll and invoke new users.
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: participant-ca.contentbackchain.com

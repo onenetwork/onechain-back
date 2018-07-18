@@ -9,7 +9,7 @@ export LS_COLORS='ow=01;36;40'
 export COMPOSE_PROJECT_NAME=net
 
 cd /home/vagrant/onechain-back/hyp/content-backchain/basic-network
-sudo chmod +x ./generate.sh ./start.sh ./stop.sh ../server/./runApp.sh
+sudo chmod +x ./generate.sh ./start.sh ./stop.sh ./runServer.sh
 
 # Generate certificates and docker-compose-yml file with new key if it is not done yet.
 if [[ ! -d "crypto-config" ]]; then
@@ -39,7 +39,7 @@ bk() {
     echo
     echo "Commands are:"
     echo "  help    show this help message"
-    echo "  log     open the OrchestratorOrg peer logs in less with follow mode enabled"
+    echo "  log     open the test server logs in less with follow mode enabled"
     echo "  start   start the test server (Hyperledger Fabric) to host the Backchain for testing purposes"
     echo "  stop    stop the test server process"
     if [ "$1" = 'help' ]; then

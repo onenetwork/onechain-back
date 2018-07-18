@@ -19,12 +19,19 @@ var invokeChaincode = async function(channelName, chaincodeName, fcn, args, user
 		// first setup the client for this org
 		var client = await helper.getClientForOrg(org_name, username);
 		logger.debug('Successfully got the fabric client for the organization "%s" and user"%s"', org_name, username);
+
+		// PublicKey of User as chaincode argrument to validate user as Orchestrator
+		var user = client.getUserContext(username);
+		var publicKey = user.getSigningIdentity()._publicKey.toBytes();
+		args.push(publicKey);
+
 		var channel = client.getChannel(channelName);
 		if(!channel) {
 			let message = util.format('Channel %s was not defined in the connection profile', channelName);
 			logger.error(message);
 			throw new Error(message);
 		}
+
 		var tx_id = client.newTransactionID();
 		// will need the transaction ID string for the event registration later
 		tx_id_string = tx_id.getTransactionID();
@@ -55,7 +62,7 @@ var invokeChaincode = async function(channelName, chaincodeName, fcn, args, user
 			if (proposalResponses && proposalResponses[i].response &&
 				proposalResponses[i].response.status === 200) {
 				one_good = true;
-				logger.info('invoke chaincode proposal was good');
+				logger.info('invoke chaincode proposal was good:%s', proposalResponses[i].response.message);
 			} else {
 				logger.error('invoke chaincode proposal was bad');
 			}

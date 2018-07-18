@@ -55,7 +55,8 @@ ORG1_TOKEN=$(curl -s -X POST \
 	  	-H "content-type: application/x-www-form-urlencoded" \
   		-d 'username=OrchestratorUser&orgName=OrchestratorOrg')
 
-#ORCHESTRATOR_PKEY=$(echo $ORG1_TOKEN | jq ".publicKey" | sed "s/\"//g")
+ORCHESTRATOR_PKEY=$(echo $ORG1_TOKEN | jq ".publicKey" | sed "s/\"//g")
+
 ORG1_TOKEN=$(echo $ORG1_TOKEN | jq ".token" | sed "s/\"//g")
 	
 ORG2_TOKEN=$(curl -s -X POST \
@@ -66,7 +67,7 @@ ORG2_TOKEN=$(echo $ORG2_TOKEN | jq ".token" | sed "s/\"//g")
 
 cd "$CURRENT_DIR"
 #Initialize chaincode
-ARGS='{"Args":["'$ORG1_TOKEN'"]}'
+ARGS='{"Args":["'$ORCHESTRATOR_PKEY'"]}'
 docker exec -e "CORE_PEER_LOCALMSPID=OrchestratorOrgMSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orchestratororg.contentbackchain.com/users/Admin@orchestratororg.contentbackchain.com/msp" cli peer chaincode instantiate -o orderer.contentbackchain.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/contentbackchain.com/orderers/orderer.contentbackchain.com/msp/tlscacerts/tlsca.contentbackchain.com-cert.pem -C contentbackchainchannel -n ContentBackChain -l "$LANGUAGE" -v 1.0 -c "$ARGS" -P "OR ('OrchestratorOrgMSP.member','ParticipantOrgMSP.member')"
 
 

@@ -152,9 +152,14 @@ app.post('/invoke', async function(req, res) {
 		res.json(getErrorMessage('\'args\''));
 		return;
 	}
+	
+	try {
+		let message = await invoke.invokeChaincode(channelName, chaincodeName, fcn, [args], req.username, req.orgname);
+		res.send(message);
+	}catch(error){
+	  	res.status(500).json({success: false, message: error.toString()});
+	};
 
-	let message = await invoke.invokeChaincode(channelName, chaincodeName, fcn, [args, req.token], req.username, req.orgname);
-	res.send(message);
 });
 // Query on chaincode on target peers
 app.get('/query', async function(req, res) {
@@ -187,6 +192,11 @@ app.get('/query', async function(req, res) {
 		return;
 	}
 
-	let message = await query.queryChaincode(channelName, chaincodeName, [args], fcn, req.username, req.orgname);
-	res.send(message);
+	try {
+		let message = await query.queryChaincode(channelName, chaincodeName, [args], fcn, req.username, req.orgname);
+		res.send(message);
+	}catch(error){
+	  	res.status(500).json({success: false, message: error.toString()});
+	};
+
 });

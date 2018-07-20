@@ -24,8 +24,8 @@ type ContentBackChain struct {
 // Key for persisting number of hash count in ledger
 const NUMBER_OF_HASHES string = "NumberOfHashes"
 
-// Key for persisting Orchestator public key in ledger
-const ORCHESTATOR string = "Orchestator"
+// Key for persisting Orchestrator public key in ledger
+const ORCHESTRATOR string = "Orchestrator"
 
 /*
  * The Init method is called when the Smart Contract "ContentBackChain" is instantiated by the blockchain network
@@ -38,7 +38,7 @@ func (s *ContentBackChain) Init(APIstub shim.ChaincodeStubInterface) sc.Response
         
         // Persist orchestrator 
         args := APIstub.GetArgs()
-        APIstub.PutState(ORCHESTATOR, []byte(args[0]))
+        APIstub.PutState(ORCHESTRATOR, []byte(args[0]))
   
         return shim.Success(nil)
 }
@@ -71,9 +71,9 @@ func (s *ContentBackChain) post(APIstub shim.ChaincodeStubInterface, args []stri
 
         // Validate Creator should be Orchestrator
 	creator := args[1]	
-        orchestratorAsBytes, _ := APIstub.GetState(ORCHESTATOR)
-	orchestator := string(orchestratorAsBytes)
-        if(creator != orchestator){
+        orchestratorAsBytes, _ := APIstub.GetState(ORCHESTRATOR)
+	orchestrator := string(orchestratorAsBytes)
+        if(creator != orchestrator){
                 return shim.Error("Only the Orchestrator may post a hash.") 
         }
  

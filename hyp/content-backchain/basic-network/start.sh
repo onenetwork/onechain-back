@@ -5,9 +5,13 @@
 #
 #
 
+echo "Stopping server if it is already up ..."
+./stop.sh &> /dev/null
+
+sleep 10
+
 # Exit on first error
 set -e
-
 # don't rewrite paths for Windows Git Bash users
 export MSYS_NO_PATHCONV=1
 starttime=$(date +%s)

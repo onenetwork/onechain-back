@@ -27,7 +27,7 @@ docker-compose -f docker-compose.yml up -d orchestrator-ca.contentbackchain.com 
 
 # wait for Hyperledger Fabric to start
 # incase of errors when running later commands, issue export FABRIC_START_TIMEOUT=<larger number>
-sleep 15
+sleep 30
 
 # Create the channel
 docker exec -e "CORE_PEER_LOCALMSPID=OrchestratorOrgMSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@orchestratororg.contentbackchain.com/msp" peer0.orchestratororg.contentbackchain.com peer channel create -o orderer.contentbackchain.com:7050 -c contentbackchainchannel -f /etc/hyperledger/configtx/channel.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/tlscacerts/tlsca.contentbackchain.com-cert.pem

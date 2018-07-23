@@ -26,8 +26,10 @@
     "express-session": "^1.15.2",
     "fabric-ca-client": "~1.1.0",
     "fabric-client": "~1.1.0",
+    "fs": "0.0.1-security",
     "fs-extra": "^2.0.0",
     "jsonwebtoken": "^7.3.0",
-    "log4js": "^0.6.38"
+    "log4js": "^0.6.38",
+    "properties-reader": "0.0.16"
   }
 }

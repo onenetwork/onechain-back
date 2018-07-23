@@ -2,8 +2,6 @@
 var log4js = require('log4js');
 var logger = log4js.getLogger('ContnetBackChainWebApp');
 var express = require('express');
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
 var util = require('util');
@@ -12,6 +10,8 @@ var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var bearerToken = require('express-bearer-token');
 var cors = require('cors');
+var propReader = require('properties-reader');
+var fs = require('fs');
 
 require('./config.js');
 var hfc = require('fabric-client');
@@ -76,7 +76,19 @@ app.use(function(req, res, next) {
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// START SERVER /////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-var server = http.createServer(app).listen(port, function() {});
+var server = http.createServer(app).listen(port, function() {
+	//Initialize tokens
+	var tokenPath = 'artifacts/tokens';
+	if (!fs.existsSync(tokenPath)) {
+		fs.closeSync(fs.openSync(tokenPath, 'w'));
+	}
+
+	var tokens = propReader(tokenPath);
+	if(tokens){
+		app.set("OrchestratorUserToken", tokens.get('app.token.OrchestratorUser'));
+		app.set("ParticipantUserToken", tokens.get('app.token.ParticipantUser'));
+	}
+});
 logger.info('****************** SERVER STARTED ************************');
 logger.info('***************  http://%s:%s  ******************',host,port);
 server.timeout = 240000;
@@ -107,17 +119,28 @@ app.post('/users', async function(req, res) {
 		res.json(getErrorMessage('\'orgName\''));
 		return;
 	}
-	var token = jwt.sign({
-		exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
+
+	var existingToken = app.get(username + 'Token')	
+	var token =  existingToken ? existingToken : jwt.sign({
 		username: username,
 		orgName: orgName
 	}, app.get('secret'));
+
 	let response = await helper.getRegisteredUser(username, orgName, true);
 	logger.debug('-- returned from registering the username %s for organization %s',username,orgName);
 	if (response && typeof response !== 'string') {
 		logger.debug('Successfully registered the username %s for organization %s',username,orgName);
 		response.token = token;
 		res.json(response);
+
+		// Persist new token in its file
+		if(!existingToken){
+			fs.appendFile('artifacts/tokens', 'app.token.' + username + '=' + token + '\n', function (err) {
+				if (err) throw err; 
+				logger.debug('Token Saved!');
+			});
+			app.set(username + 'Token', token);
+		}
 	} else {
 		logger.debug('Failed to register the username %s for organization %s with::%s',username,orgName,response);
 		res.json({success: false, message: response});

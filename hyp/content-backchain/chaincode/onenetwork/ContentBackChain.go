@@ -7,6 +7,7 @@ import (
         "strconv"
         "github.com/hyperledger/fabric/core/chaincode/shim"
         sc "github.com/hyperledger/fabric/protos/peer"
+        "encoding/hex"
 )
 
 /*
@@ -58,6 +59,8 @@ func (s *ContentBackChain) Invoke(APIstub shim.ChaincodeStubInterface) sc.Respon
                 return s.verify(APIstub, args)
         } else if function == "hashCount" {
 		return s.hashCount(APIstub, args)
+	} else if function == "getOrchestrator" {
+		return s.getOrchestrator(APIstub, args)
 	}
 
         return shim.Error("Invalid chaincode request.")
@@ -113,6 +116,13 @@ func (s *ContentBackChain) verify(APIstub shim.ChaincodeStubInterface, args []st
                 return shim.Success([]byte(strconv.FormatBool(true)))
         }
  }
+
+ // Returns the Orchestrator public key in 0x hex string format.
+func (s *ContentBackChain) getOrchestrator(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+        orchestratorAsBytes, _ := APIstub.GetState(ORCHESTRATOR)
+        orchestrator := "0x" + hex.EncodeToString(orchestratorAsBytes)
+        return shim.Success([]byte(orchestrator))
+}
 
  func main() {
         err := shim.Start(new(ContentBackChain))

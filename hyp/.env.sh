@@ -8,6 +8,13 @@ alias e=vim
 export LS_COLORS='ow=01;36;40'
 export COMPOSE_PROJECT_NAME=net
 
+# Install node modules for Node WebApp server if not installed.
+cd /home/vagrant/onechain-back/hyp/content-backchain/server
+if [[ ! -d "node_modules" ]]; then
+  echo "Installing node modules ..."
+	npm install
+fi
+
 cd /home/vagrant/onechain-back/hyp/content-backchain/basic-network
 sudo chmod +x ./generate.sh ./start.sh ./stop.sh ./runServer.sh
 

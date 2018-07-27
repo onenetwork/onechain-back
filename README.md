@@ -9,8 +9,9 @@ Licensed under the [Apache License, version 2.0](http://www.apache.org/licenses/
 
 ## Setup
 
+Setup instructions for Windows environments:
+
 #### Etherium Network 
-Setup for Windows environments:
  * install [VirtualBox](https://www.virtualbox.org/)
  * install [Vagrant](https://www.vagrantup.com/)
  * Run `vagrant plugin install vagrant-vbguest`
@@ -23,13 +24,12 @@ Setup for Windows environments:
  * Run `bk help` for further instructions
 
 #### Hyperledger Fabric Network 
-Setup for Windows environments:
  * install [VirtualBox](https://www.virtualbox.org/)
  * install [Vagrant](https://www.vagrantup.com/)
  * Run `vagrant plugin install vagrant-vbguest`
  * Clone the onechain-back repo using `git clone https://github.com/onenetwork/onechain-back.git`
  * cd to the `onechain-back/hyp` directory in the cloned folder
- * Modify the file `Vagrant`, repointing "E:/views/onechain-back/eth" to your cloned onechain-back directory in the line: `config.vm.synced_folder "E:/views/onechain-back/hyp", "/vagrant"`
+ * Modify the file `Vagrant`, repointing "E:/views/onechain-back/hyp" to your cloned onechain-back directory in the line: `config.vm.synced_folder "E:/views/onechain-back/hyp", "/vagrant"`
  * Run `vagrant up` to provision and start the VM
  * Run `vagrant ssh` to connect to the VM
  * This will put you in `/vagrant`, which is bound to your local `onechain-back/hyp` directory, and should be your location for executing commands and doing work

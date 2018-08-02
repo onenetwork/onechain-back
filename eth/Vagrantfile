@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
     sudo npm install -g sync-exec
     sudo npm install -g solc
     sudo npm install -g web3
-    sudo npm install -g truffle@3.4.3
+    sudo npm install -g truffle@3.4.9
     sudo npm install -g ganache-cli
     sudo npm install -g mocha
 
